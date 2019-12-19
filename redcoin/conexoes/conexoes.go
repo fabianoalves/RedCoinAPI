@@ -1,5 +1,6 @@
 package conexoes
 
+var ChaveJwt = []byte("my_secret_key")
 
 //Mysql representa as credenciais de acesso ao banco
 type Mysql struct {

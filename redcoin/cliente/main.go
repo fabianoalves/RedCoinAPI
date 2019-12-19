@@ -76,6 +76,11 @@ func postPut(w http.ResponseWriter, r *http.Request) {
 func urlChamada(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	if !controllers.ValidarToken(w, r){
+		w.Write([]byte(`{"message":"Token inválido"}`))
+		return
+	}
+
 	switch r.Method {
 	case "GET":
 		get(w, r)
@@ -89,6 +94,7 @@ func urlChamada(w http.ResponseWriter, r *http.Request) {
 
 //Index home da Api
 func Index() {
+	http.HandleFunc("/autenticacao/",controllers.AutenticacaoApi)
 	http.HandleFunc("/api/v1/TipoOperacao/", urlChamada)
 	http.HandleFunc("/api/v1/Perfil/", urlChamada)
 	http.HandleFunc("/api/v1/Usuario/", urlChamada)
