@@ -4,8 +4,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"strings"
 	"redcoin/controllers"
+	"strings"
 )
 
 func get(w http.ResponseWriter, r *http.Request) {
@@ -23,10 +23,10 @@ func get(w http.ResponseWriter, r *http.Request) {
 		e = controllers.ListarUsuario(w, r)
 		break
 	case strings.Contains(r.URL.Path, "Operacao/Email"):
-		e = controllers.EmailUsuarioOperacao(w,r)
+		e = controllers.EmailUsuarioOperacao(w, r)
 		break
 	case strings.Contains(r.URL.Path, "Operacao/Data"):
-		e = controllers.PeriodoOperacao(w,r)
+		e = controllers.PeriodoOperacao(w, r)
 		break
 	default:
 		e = errors.New("PATH NOT FOUND")
@@ -57,7 +57,7 @@ func postPut(w http.ResponseWriter, r *http.Request) {
 		e = controllers.PersistirUsuario(w, r)
 		break
 	case strings.Contains(r.URL.Path, "Operacao"):
-		e = controllers.PersistirOperacao(w,r)
+		e = controllers.PersistirOperacao(w, r)
 		break
 	default:
 		e = errors.New("PATH NOT FOUND")
@@ -76,7 +76,7 @@ func postPut(w http.ResponseWriter, r *http.Request) {
 func urlChamada(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if !controllers.ValidarToken(w, r){
+	if !controllers.ValidarToken(w, r) {
 		w.Write([]byte(`{"message":"Token inválido"}`))
 		return
 	}
@@ -94,15 +94,17 @@ func urlChamada(w http.ResponseWriter, r *http.Request) {
 
 //Index home da Api
 func Index() {
-	http.HandleFunc("/autenticacao/",controllers.AutenticacaoApi)
+	http.HandleFunc("/autenticacao/", controllers.AutenticacaoApi)
+	http.HandleFunc("/autenticacao/AdicionarCliente", controllers.PersistirClienteApi)
+
 	http.HandleFunc("/api/v1/TipoOperacao/", urlChamada)
 	http.HandleFunc("/api/v1/Perfil/", urlChamada)
 	http.HandleFunc("/api/v1/Usuario/", urlChamada)
 	http.HandleFunc("/api/v1/Operacao/", urlChamada)
 	http.HandleFunc("/api/v1/Operacao/Email/", urlChamada)
 	http.HandleFunc("/api/v1/Operacao/Data/", urlChamada)
-	
-	log.Fatal(http.ListenAndServe(":8086", nil))
+
+	log.Fatal(http.ListenAndServe(":2801", nil))
 }
 
 func main() {

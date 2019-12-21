@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"net/http"
 	"errors"
 	"fmt"
+	"net/http"
 	"redcoin/modelos"
 	"redcoin/repositorio"
 	"time"
@@ -15,7 +15,7 @@ func EmailUsuarioOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
 
 	keys, ok := r.URL.Query()["email"]
 	if !ok || len(keys[0]) < 1 {
-			return errors.New("Necessário parâmetro email")
+		return errors.New("Necessário parâmetro email")
 	}
 
 	email := keys[0]
@@ -35,7 +35,7 @@ func PeriodoOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
 
 	keys, ok := r.URL.Query()["data"]
 	if !ok || len(keys[0]) < 1 {
-			return errors.New(`Necessário parâmetro Data no Formato "YYYY-MES-dd" exemplo: "2019-FEB-01"`)
+		return errors.New(`Necessário parâmetro Data no Formato "YYYY-MES-dd" exemplo: "2019-FEB-01"`)
 	}
 
 	sdata := keys[0]
@@ -63,14 +63,14 @@ func PersistirOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
 
 	operacao.ValorMoeda, existeCache = repositorio.CotacaoEmCache()
 
-	if existeCache != true{
+	if existeCache != true {
 		operacao.ValorMoeda, e = repositorio.CotacaoBitCoin()
 		if e != nil {
 			return e
 		}
 		repositorio.CotacaoGravarCache(operacao.ValorMoeda)
 	}
-	
+
 	operacao.ValorMoeda = operacao.ValorMoeda * operacao.ValorBitCoin
 
 	switch r.Method {
