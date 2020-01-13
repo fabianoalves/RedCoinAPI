@@ -1,20 +1,15 @@
 package repositorio
 
 import (
-	_ "fmt"
 	"time"
-	"redcoin/modelos"
+
+	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
 )
 
 //AdicionarOperacao método para adicionar um novo registro de Operacao
-func AdicionarOperacao(operacao modelos.Operacao) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AdicionarOperacao(cn *Conexao, operacao e.Operacao) (erro error) {
 
-	addOperacao, err := db.Prepare(`INSERT INTO Operacao
+	addOperacao, err := cn.Db.Prepare(`INSERT INTO Operacao
 										(idTipoOperacao
 										, idVendedor
 										, idComprador
@@ -25,13 +20,13 @@ func AdicionarOperacao(operacao modelos.Operacao) (erro error) {
 		return err
 	}
 
-	_ ,err = addOperacao.Exec(operacao.TipoOperacao.IDTipoOperacao, operacao.Vendedor.IdUsuario, operacao.Comprador.IdUsuario, operacao.DataOperacao, operacao.ValorMoeda, operacao.ValorBitCoin)
-	if err != nil{
+	_, err = addOperacao.Exec(operacao.TipoOperacao.IDTipoOperacao, operacao.Vendedor.IDUsuario, operacao.Comprador.IDUsuario, operacao.DataOperacao, operacao.ValorMoeda, operacao.ValorBitCoin)
+	if err != nil {
 		return err
 	}
 
-	err = AtualizaSaldoBitCoin(operacao.ValorBitCoin, operacao.Vendedor.IdUsuario, operacao.Comprador.IdUsuario)
-	if err != nil{
+	err = AtualizaSaldoBitCoin(cn, operacao.ValorBitCoin, operacao.Vendedor.IDUsuario, operacao.Comprador.IDUsuario)
+	if err != nil {
 		return err
 	}
 
@@ -39,16 +34,10 @@ func AdicionarOperacao(operacao modelos.Operacao) (erro error) {
 }
 
 //EmailUsuarioOperacao retorna todos os registros de operacao realizado por determinado email de um usuario
-func EmailUsuarioOperacao(email string) (usuarioOperacao modelos.UsuarioOperacao, erro error) {
-	uO := modelos.UsuarioOperacao{}
+func EmailUsuarioOperacao(cn *Conexao, email string) (usuarioOperacao e.UsuarioOperacao, erro error) {
+	uO := e.UsuarioOperacao{}
 
-	db, err := Conexao()
-	if err != nil {
-		return uO, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`
+	rows, err := cn.Db.Query(`
 	 SELECT
 		u.idUsuario 
 		,CONCAT(u.nome, ' ', u.ultimoNome) AS nomeCompleto
@@ -76,8 +65,8 @@ func EmailUsuarioOperacao(email string) (usuarioOperacao modelos.UsuarioOperacao
 	}
 
 	for rows.Next() {
-		uoRow := modelos.Operacoes{}
-		rows.Scan(&uO.IdUsuario, &uO.NomeCompleto, &uoRow.IdOperacao, &uoRow.TipoOperacao, &uoRow.IdVendedor, 
+		uoRow := e.Operacoes{}
+		rows.Scan(&uO.IDUsuario, &uO.NomeCompleto, &uoRow.IDOperacao, &uoRow.TipoOperacao, &uoRow.IDVendedor,
 			&uoRow.EmailVendedor, &uoRow.NomeCompletoVendedor, &uoRow.DataOperacao, &uoRow.ValorMoeda, &uoRow.ValorBitCoin)
 		uO.Email = email
 		uO.Operacoes = append(uO.Operacoes, uoRow)
@@ -87,20 +76,14 @@ func EmailUsuarioOperacao(email string) (usuarioOperacao modelos.UsuarioOperacao
 }
 
 //PeriodoOperacao retorna as operações  de acordo com um periodo informad o
-func PeriodoOperacao(periodo time.Time)  (operacao []modelos.Operacao, erro error ) {
-	o := []modelos.Operacao{}
+func PeriodoOperacao(cn *Conexao, periodo time.Time) (operacao []e.Operacao, erro error) {
+	o := []e.Operacao{}
 	anoI, mesI, diaI := periodo.Date()
 
 	inicio := time.Date(anoI, mesI, diaI, 0, 0, 0, 0, time.UTC)
 	fim := time.Date(anoI, mesI, diaI, 23, 59, 59, 997, time.UTC)
 
-	db, err := Conexao()
-	if err != nil {
-		return o, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`select  
+	rows, err := cn.Db.Query(`select  
 			o.idOperacao
 			,t.idTipoOperacao
 			,t.operacao
@@ -129,9 +112,9 @@ func PeriodoOperacao(periodo time.Time)  (operacao []modelos.Operacao, erro erro
 	}
 
 	for rows.Next() {
-		oRow := modelos.Operacao{}
+		oRow := e.Operacao{}
 
-		rows.Scan(&oRow.IdOperacao, &oRow.TipoOperacao.IDTipoOperacao, &oRow.TipoOperacao.Operacao,
+		rows.Scan(&oRow.IDOperacao, &oRow.TipoOperacao.IDTipoOperacao, &oRow.TipoOperacao.Operacao,
 			&oRow.Vendedor.Email, &oRow.Vendedor.Nome, &oRow.Vendedor.UltimoNome,
 			&oRow.Comprador.Email, &oRow.Comprador.Nome, &oRow.Comprador.UltimoNome,
 			&oRow.DataOperacao, &oRow.ValorMoeda, &oRow.ValorBitCoin)

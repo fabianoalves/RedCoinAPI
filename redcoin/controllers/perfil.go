@@ -6,33 +6,36 @@ import (
 	"net/http"
 	"strconv"
 
-	"redcoin/repositorio"
-	"redcoin/modelos"
+	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+	"github.com/rteles86/RedCoinApi/redcoin/servico"
 )
 
 //TodosPerfil método responsavel por listar os Perfil
-func TodosPerfil(w http.ResponseWriter, r *http.Request) (erro error) {
+func TodosPerfil(w http.ResponseWriter, r *http.Request) {
+	w.Header()
 
-	keys, ok := r.URL.Query()["id"]
-	if !ok || len(keys[0]) < 1 {
-		tP, e := repositorio.TodosPerfil()
-		if e != nil {
-			return e
-		}
-
-		json, _ := json.Marshal(tP)
-		fmt.Fprint(w, string(json))
+	tP, e := servico.TodosPerfil()
+	if e != nil {
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	id, e := strconv.Atoi(keys[0])
-	if e != nil {
-		return e
-	}
+	json, _ := json.Marshal(tP)
+	fmt.Fprint(w, string(json))
+	return
+}
 
-	p, e := repositorio.IDPerfil(int8(id))
+//IDPerfil Retorna o objeto de perfil de acordo com o ID informado
+func IDPerfil(w http.ResponseWriter, r *http.Request) {
+	keys := r.URL.Query()["id"]
+	id, e := strconv.Atoi(keys[0])
+
+	p, e := servico.IDPerfil(int8(id))
 	if e != nil {
-		return e
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	json, _ := json.Marshal(p)
@@ -40,26 +43,58 @@ func TodosPerfil(w http.ResponseWriter, r *http.Request) (erro error) {
 	return
 }
 
-//PersistirPerfil método responsavel por adicionar um Perfil
-func PersistirPerfil(w http.ResponseWriter, r *http.Request) (erro error) {
-	var perfil modelos.Perfil
-	e := json.NewDecoder(r.Body).Decode(&perfil)
-	if e != nil {
-		return e
+//AdicionarPerfil método responsável pela criação de um novo Perfil
+func AdicionarPerfil(w http.ResponseWriter, r *http.Request) {
+	var perfil e.Perfil
+	err := json.NewDecoder(r.Body).Decode(&perfil)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	switch r.Method {
-	case "POST":
-		e = repositorio.AdicionarPerfil(perfil)
-		break
-	case "PUT":
-		e = repositorio.AlterarPerfil(perfil)
-		break
+	err = e.New(&perfil)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		return
 	}
 
-	if e != nil {
-		return e
+	err = servico.AdicionarPerfil(perfil)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	return nil
+	w.Write([]byte(`{"msg":"Perfil criado com sucesso"}`))
+	w.WriteHeader(http.StatusOK)
+}
+
+//AlterarPerfil método responsável pela alteração de um Perfil
+func AlterarPerfil(w http.ResponseWriter, r *http.Request) {
+	var perfil e.Perfil
+	err := json.NewDecoder(r.Body).Decode(&perfil)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = e.New(&perfil)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		return
+	}
+
+	err = servico.AtualizarPerfil(perfil)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Write([]byte(`{"msg":"Perfil atualizado com sucesso"}`))
+	w.WriteHeader(http.StatusOK)
 }

@@ -1,24 +1,19 @@
 package repositorio
 
-import "redcoin/modelos"
+import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
 
 //TodosTipoOperacao retorna todos os registros da tabela tipoOperacao
-func TodosTipoOperacao() (listaTipoOperacao []modelos.TipoOperacao, erro error) {
-	to := []modelos.TipoOperacao{}
-	db, err := Conexao()
-	if err != nil {
-		return to, err
-	}
-	defer db.Close()
+func TodosTipoOperacao(cn *Conexao) (listaTipoOperacao []e.TipoOperacao, erro error) {
+	to := []e.TipoOperacao{}
 
-	rows, err := db.Query("SELECT idTipoOperacao, Operacao, registroApagado FROM TipoOperacao")
+	rows, err := cn.Db.Query("SELECT idTipoOperacao, Operacao, registroApagado FROM TipoOperacao")
 	defer rows.Close()
 	if err != nil {
 		return to, err
 	}
 
 	for rows.Next() {
-		pTo := modelos.TipoOperacao{}
+		pTo := e.TipoOperacao{}
 		rows.Scan(&pTo.IDTipoOperacao, &pTo.Operacao, &pTo.RegistroApagado)
 		to = append(to, pTo)
 	}
@@ -27,29 +22,18 @@ func TodosTipoOperacao() (listaTipoOperacao []modelos.TipoOperacao, erro error) 
 }
 
 //IDTipoOperacao retorna o registro de um TipoOperacao de acordo com o ID informado
-func IDTipoOperacao(id int8) (tipoOperacao modelos.TipoOperacao, erro error) {
-	to := modelos.TipoOperacao{}
+func IDTipoOperacao(cn *Conexao, id int8) (tipoOperacao e.TipoOperacao, erro error) {
+	to := e.TipoOperacao{}
 
-	db, err := Conexao()
-	if err != nil {
-		return to, err
-	}
-	defer db.Close()
+	e := cn.Db.QueryRow("SELECT idTipoOperacao, operacao FROM TipoOperacao WHERE idTipoOperacao = ?", id).Scan(&to.IDTipoOperacao, &to.Operacao)
 
-	db.QueryRow("SELECT idTipoOperacao, operacao FROM TipoOperacao WHERE idTipoOperacao = ?", id).Scan(&to.IDTipoOperacao, &to.Operacao)
-
-	return to, err
+	return to, e
 }
 
 //AdicionarTipoOperacao método para adicionar um novo registro de TipoOperacao
-func AdicionarTipoOperacao(tipoOperacao modelos.TipoOperacao) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AdicionarTipoOperacao(cn *Conexao, tipoOperacao e.TipoOperacao) (erro error) {
 
-	addTipoOperacao, err := db.Prepare("INSERT INTO TipoOperacao(operacao)VALUES(?)")
+	addTipoOperacao, err := cn.Db.Prepare("INSERT INTO TipoOperacao(operacao)VALUES(?)")
 	if err != nil {
 		return err
 	}
@@ -60,14 +44,9 @@ func AdicionarTipoOperacao(tipoOperacao modelos.TipoOperacao) (erro error) {
 }
 
 //AlterarTipoOperacao método para atualizar o registro de um TipoOperacao de acordo com ID informado
-func AlterarTipoOperacao(tipoOperacao modelos.TipoOperacao) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AlterarTipoOperacao(cn *Conexao, tipoOperacao e.TipoOperacao) (erro error) {
 
-	addTipoOperacao, err := db.Prepare("UPDATE TipoOperacao SET operacao = ?, registroApagado = ? WHERE idTipoOperacao = ?")
+	addTipoOperacao, err := cn.Db.Prepare("UPDATE TipoOperacao SET operacao = ?, registroApagado = ? WHERE idTipoOperacao = ?")
 	if err != nil {
 		return err
 	}

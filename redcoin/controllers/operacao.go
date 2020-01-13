@@ -2,27 +2,31 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
-	"redcoin/modelos"
-	"redcoin/repositorio"
 	"time"
+
+	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+	"github.com/rteles86/RedCoinApi/redcoin/servico"
 )
 
 //EmailUsuarioOperacao método responsavel por listar as operações de um determinado usuario através de seu Email
-func EmailUsuarioOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
+func EmailUsuarioOperacao(w http.ResponseWriter, r *http.Request) {
 
 	keys, ok := r.URL.Query()["email"]
 	if !ok || len(keys[0]) < 1 {
-		return errors.New("Necessário parâmetro email")
+		w.Write([]byte(`{"msg":"Necessário parâmetro email"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	email := keys[0]
 
-	eOp, e := repositorio.EmailUsuarioOperacao(email)
+	eOp, e := servico.EmailUsuarioOperacao(email)
 	if e != nil {
-		return e
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	json, _ := json.Marshal(eOp)
@@ -31,19 +35,23 @@ func EmailUsuarioOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
 }
 
 //PeriodoOperacao método responsavel por listar as operações de uma determinada Data
-func PeriodoOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
+func PeriodoOperacao(w http.ResponseWriter, r *http.Request) {
 
 	keys, ok := r.URL.Query()["data"]
 	if !ok || len(keys[0]) < 1 {
-		return errors.New(`Necessário parâmetro Data no Formato "YYYY-MES-dd" exemplo: "2019-FEB-01"`)
+		w.Write([]byte(`{"msg":"Necessário parâmetro Data no Formato "YYYY-MES-dd" exemplo: "2019-FEB-01""}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	sdata := keys[0]
 	data, e := time.Parse("2006-01-02", sdata)
 
-	pOp, e := repositorio.PeriodoOperacao(data)
+	pOp, e := servico.PeriodoOperacao(data)
 	if e != nil {
-		return e
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	json, _ := json.Marshal(pOp)
@@ -52,35 +60,29 @@ func PeriodoOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
 }
 
 //PersistirOperacao método responsavel por adicionar uma operaçao
-func PersistirOperacao(w http.ResponseWriter, r *http.Request) (erro error) {
-	var operacao modelos.Operacao
-	var existeCache bool
-
-	e := json.NewDecoder(r.Body).Decode(&operacao)
-	if e != nil {
-		return e
+func PersistirOperacao(w http.ResponseWriter, r *http.Request) {
+	var operacao e.Operacao
+	err := json.NewDecoder(r.Body).Decode(&operacao)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	operacao.ValorMoeda, existeCache = repositorio.CotacaoEmCache()
-
-	if existeCache != true {
-		operacao.ValorMoeda, e = repositorio.CotacaoBitCoin()
-		if e != nil {
-			return e
-		}
-		repositorio.CotacaoGravarCache(operacao.ValorMoeda)
+	err = e.New(&operacao)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		return
 	}
 
-	operacao.ValorMoeda = operacao.ValorMoeda * operacao.ValorBitCoin
-
-	switch r.Method {
-	case "POST":
-		e = repositorio.AdicionarOperacao(operacao)
-		break
-	}
-	if e != nil {
-		return e
+	err = servico.PersistirOperacao(operacao)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	return nil
+	w.Write([]byte(`{"msg":"Transação de Bitcoin criada com sucesso"}`))
+	w.WriteHeader(http.StatusOK)
 }

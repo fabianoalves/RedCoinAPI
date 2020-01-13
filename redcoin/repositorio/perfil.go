@@ -1,25 +1,20 @@
 package repositorio
 
-import "redcoin/modelos"
+import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
 
 //TodosPerfil retorna todos os registros da tabela Perfil
-func TodosPerfil() (listaPerfil []modelos.Perfil, erro error) {
-	p := []modelos.Perfil{}
-	db, err := Conexao()
-	if err != nil {
-		return p, err
-	}
-	defer db.Close()
+func TodosPerfil(cn *Conexao) (listaPerfil []e.Perfil, erro error) {
+	p := []e.Perfil{}
 
-	rows, err := db.Query("SELECT idPerfil, perfil, registroApagado FROM Perfil")
+	rows, err := cn.Db.Query("SELECT idPerfil, perfil, registroApagado FROM Perfil")
 	defer rows.Close()
 	if err != nil {
 		return p, err
 	}
 
 	for rows.Next() {
-		pReg := modelos.Perfil{}
-		rows.Scan(&pReg.IdPerfil, &pReg.Perfil, &pReg.RegistroApagado)
+		pReg := e.Perfil{}
+		rows.Scan(&pReg.IDPerfil, &pReg.Perfil, &pReg.RegistroApagado)
 		p = append(p, pReg)
 	}
 
@@ -27,29 +22,18 @@ func TodosPerfil() (listaPerfil []modelos.Perfil, erro error) {
 }
 
 //IDPerfil retorna o registro de um perfil de acordo com o ID informado
-func IDPerfil(id int8) (perfil modelos.Perfil, erro error) {
-	p := modelos.Perfil{}
+func IDPerfil(cn *Conexao, id int8) (perfil e.Perfil, erro error) {
+	p := e.Perfil{}
 
-	db, err := Conexao()
-	if err != nil {
-		return p, err
-	}
-	defer db.Close()
+	e := cn.Db.QueryRow("SELECT idPerfil, perfil FROM Perfil WHERE idPerfil = ?", id).Scan(&p.IDPerfil, &p.Perfil)
 
-	db.QueryRow("SELECT idPerfil, perfil FROM Perfil WHERE idPerfil = ?", id).Scan(&p.IdPerfil, &p.Perfil)
-
-	return p, err
+	return p, e
 }
 
 //AdicionarPerfil método para adicionar um novo registro de Perfil
-func AdicionarPerfil(perfil modelos.Perfil) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AdicionarPerfil(cn *Conexao, perfil e.Perfil) (erro error) {
 
-	addPerfil, err := db.Prepare("INSERT INTO Perfil(perfil)VALUES(?)")
+	addPerfil, err := cn.Db.Prepare("INSERT INTO Perfil(perfil)VALUES(?)")
 	if err != nil {
 		return err
 	}
@@ -60,19 +44,14 @@ func AdicionarPerfil(perfil modelos.Perfil) (erro error) {
 }
 
 //AlterarPerfil método para atualizar o registro de um Perfil de acordo com ID informado
-func AlterarPerfil(perfil modelos.Perfil) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AlterarPerfil(cn *Conexao, perfil e.Perfil) (erro error) {
 
-	addPerfil, err := db.Prepare("UPDATE Perfil SET perfil = ?, registroApagado = ? WHERE idPerfil = ?")
+	addPerfil, err := cn.Db.Prepare("UPDATE Perfil SET perfil = ?, registroApagado = ? WHERE idPerfil = ?")
 	if err != nil {
 		return err
 	}
 
-	addPerfil.Exec(perfil.Perfil, perfil.RegistroApagado, perfil.IdPerfil)
+	addPerfil.Exec(perfil.Perfil, perfil.RegistroApagado, perfil.IDPerfil)
 
 	return nil
 }

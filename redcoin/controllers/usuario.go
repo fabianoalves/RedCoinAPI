@@ -6,33 +6,34 @@ import (
 	"net/http"
 	"strconv"
 
-	"redcoin/repositorio"
-	"redcoin/modelos"
+	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+	"github.com/rteles86/RedCoinApi/redcoin/servico"
 )
 
-//ListarUsuario método responsavel por listar 1 ou N Usuarios
-func ListarUsuario(w http.ResponseWriter, r *http.Request) (erro error) {
-
-	keys, ok := r.URL.Query()["id"]
-	if !ok || len(keys[0]) < 1 {
-		tU, e := repositorio.TodosUsuario()
-		if e != nil {
-			return e
-		}
-
-		json, _ := json.Marshal(tU)
-		fmt.Fprint(w, string(json))
+//TodosUsuario método responsavel por listar os Usuarios
+func TodosUsuario(w http.ResponseWriter, r *http.Request) {
+	tU, e := servico.TodosUsuario()
+	if e != nil {
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	id, e := strconv.Atoi(keys[0])
-	if e != nil {
-		return e
-	}
+	json, _ := json.Marshal(tU)
+	fmt.Fprint(w, string(json))
+	return
+}
 
-	u, e := repositorio.IDUsuario(id)
+//IDUsuario Retorna o objeto de Usuario de acordo com o ID informado
+func IDUsuario(w http.ResponseWriter, r *http.Request) {
+	keys := r.URL.Query()["id"]
+	id, e := strconv.Atoi(keys[0])
+
+	u, e := servico.IDUsuario(id)
 	if e != nil {
-		return e
+		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	json, _ := json.Marshal(u)
@@ -40,28 +41,58 @@ func ListarUsuario(w http.ResponseWriter, r *http.Request) (erro error) {
 	return
 }
 
-//PersistirUsuario método responsavel por adicionar ou alterar um Usuario
-func PersistirUsuario(w http.ResponseWriter, r *http.Request) (erro error) {
-	var usuario modelos.Usuario
-	e := json.NewDecoder(r.Body).Decode(&usuario)
-	if e != nil {
-		return e
+//AdicionarUsuario método responsável pela criação de um novo Usuario
+func AdicionarUsuario(w http.ResponseWriter, r *http.Request) {
+	var usuario e.Usuario
+	err := json.NewDecoder(r.Body).Decode(&usuario)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	switch r.Method {
-	case "POST":
-		e = repositorio.AdicionarUsuario(usuario)
-		w.WriteHeader(http.StatusCreated)
-		break
-	case "PUT":
-		e = repositorio.AlterarUsuario(usuario)
-		w.WriteHeader(http.StatusAccepted)
-		break
+	err = e.New(&usuario)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		return
 	}
 
-	if e != nil {
-		return e
+	err = servico.AdicionarUsuario(usuario)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	return nil
+	w.Write([]byte(`{"msg":"Usuario criado com sucesso"}`))
+	w.WriteHeader(http.StatusOK)
+}
+
+//AlterarUsuario método responsável pela alteração de um Usuario
+func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
+	var usuario e.Usuario
+	err := json.NewDecoder(r.Body).Decode(&usuario)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = e.New(&usuario)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		return
+	}
+
+	err = servico.AtualizarUsuario(usuario)
+	if err != nil {
+		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Write([]byte(`{"msg":"Usuario atualizado com sucesso"}`))
+	w.WriteHeader(http.StatusOK)
 }

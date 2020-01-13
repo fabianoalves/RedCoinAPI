@@ -1,25 +1,20 @@
 package repositorio
 
-import "redcoin/modelos"
+import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
 
-//IDUsuarioPerfilUsurio retorna todos os registros da tabela PerfilUsuario de acordo com o idUsuario
-func IDUsuarioPerfilUuario(idusuario int) (perfilUsuario []modelos.PerfilUsuario, erro error) {
-	pu := []modelos.PerfilUsuario{}
-	db, err := Conexao()
-	if err != nil {
-		return pu, err
-	}
-	defer db.Close()
+//IDUsuarioPerfilUsuario retorna todos os registros da tabela PerfilUsuario de acordo com o idUsuario
+func IDUsuarioPerfilUsuario(cn *Conexao, idusuario int) (perfilUsuario []e.PerfilUsuario, erro error) {
+	pu := []e.PerfilUsuario{}
 
-	rows, err := db.Query("SELECT idPerfilUsuario, idPerfil, idUsuario FROM PerfilUsuario WHERE idUsuario = ?", idusuario)
+	rows, err := cn.Db.Query("SELECT idPerfilUsuario, idPerfil, idUsuario FROM PerfilUsuario WHERE idUsuario = ?", idusuario)
 	defer rows.Close()
 	if err != nil {
 		return pu, err
 	}
 
 	for rows.Next() {
-		perfilU := modelos.PerfilUsuario{}
-		rows.Scan(&perfilU.IdPerfilUsuario, &perfilU.IdPerfil, &perfilU.IdUsuario)
+		perfilU := e.PerfilUsuario{}
+		rows.Scan(&perfilU.IDPerfilUsuario, &perfilU.IDPerfil, &perfilU.IDUsuario)
 		pu = append(pu, perfilU)
 	}
 
@@ -27,14 +22,9 @@ func IDUsuarioPerfilUuario(idusuario int) (perfilUsuario []modelos.PerfilUsuario
 }
 
 //AdicionarPerfilUsuario método para adicionar um novo registro de PerfilUsuario
-func AdicionarPerfilUsuario(perfilUsuario modelos.PerfilUsuario) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AdicionarPerfilUsuario(cn *Conexao, perfilUsuario e.PerfilUsuario) (erro error) {
 
-	addPerfilUsuario, err := db.Prepare(`
+	addPerfilUsuario, err := cn.Db.Prepare(`
 	INSERT INTO PerfilUsuario(idPerfil, idUsuario)VALUES(?, ?)
 	ON DUPLICATE KEY UPDATE idPerfil = ?, idUsuario = ?
 	`)
@@ -42,7 +32,7 @@ func AdicionarPerfilUsuario(perfilUsuario modelos.PerfilUsuario) (erro error) {
 		return err
 	}
 
-	addPerfilUsuario.Exec(perfilUsuario.IdPerfil, perfilUsuario.IdUsuario, perfilUsuario.IdPerfil, perfilUsuario.IdUsuario)
+	addPerfilUsuario.Exec(perfilUsuario.IDPerfil, perfilUsuario.IDUsuario, perfilUsuario.IDPerfil, perfilUsuario.IDUsuario)
 
 	return nil
 }

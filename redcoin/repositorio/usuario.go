@@ -1,33 +1,14 @@
 package repositorio
 
 import (
-	"redcoin/modelos"
-	"time"
+	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
 )
 
-//Usuario estrutura qe representa a tabela Usuario
-type Usuario struct {
-	IdUsuario       int
-	Email           string
-	Senha           string
-	Nome            string
-	UltimoNome      string
-	DataNascimento  time.Time
-	QuantidadeMoeda float64
-	RegistroApagado bool
-	PerfilUsuario   []modelos.Perfil
-}
+//TodosUsuario retorna todos os registros da tabela Usuari0
+func TodosUsuario(cn *Conexao) (listaUsuario []e.Usuario, erro error) {
+	u := []e.Usuario{}
 
-//TodosUsuario retorna todos os registros da tabela Usuari
-func TodosUsuario() (listaUsuario []modelos.Usuario, erro error) {
-	u := []modelos.Usuario{}
-	db, err := Conexao()
-	if err != nil {
-		return u, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`
+	rows, err := cn.Db.Query(`
 	SELECT
 	u.idUsuario
     ,u.email
@@ -45,7 +26,7 @@ func TodosUsuario() (listaUsuario []modelos.Usuario, erro error) {
     INNER JOIN	Perfil			AS	p
 		ON	p.idPerfil 		= pu.idPerfil
 	ORDER BY
-		u.IdUsuario ASC
+		u.IDUsuario ASC
 	`)
 	defer rows.Close()
 	if err != nil {
@@ -54,15 +35,15 @@ func TodosUsuario() (listaUsuario []modelos.Usuario, erro error) {
 
 	var indexU, idUsuario int = -1, 0
 	for rows.Next() {
-		pU := modelos.Usuario{}
-		pP := modelos.Perfil{}
-		rows.Scan(&pU.IdUsuario, &pU.Email, &pU.Senha, &pU.Nome, &pU.UltimoNome, &pU.DataNascimento,
-			&pU.QuantidadeMoeda, &pP.IdPerfil, &pP.Perfil)
+		pU := e.Usuario{}
+		pP := e.Perfil{}
+		rows.Scan(&pU.IDUsuario, &pU.Email, &pU.Senha, &pU.Nome, &pU.UltimoNome, &pU.DataNascimento,
+			&pU.QuantidadeMoeda, &pP.IDPerfil, &pP.Perfil)
 
-		if idUsuario != pU.IdUsuario {
+		if idUsuario != pU.IDUsuario {
 			u = append(u, pU)
-			indexU += 1
-			idUsuario = pU.IdUsuario
+			indexU++
+			idUsuario = pU.IDUsuario
 			u[indexU].PerfilUsuario = append(u[indexU].PerfilUsuario, pP)
 		} else {
 			u[indexU].PerfilUsuario = append(u[indexU].PerfilUsuario, pP)
@@ -73,17 +54,11 @@ func TodosUsuario() (listaUsuario []modelos.Usuario, erro error) {
 }
 
 //IDUsuario retorna o registro de um usuario de acord com o ID informado
-func IDUsuario(id int) (usuario modelos.Usuario, erro error) {
-	u := modelos.Usuario{}
-	p := modelos.Perfil{}
+func IDUsuario(cn *Conexao, id int) (usuario e.Usuario, erro error) {
+	u := e.Usuario{}
+	p := e.Perfil{}
 
-	db, err := Conexao()
-	if err != nil {
-		return u, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`
+	rows, err := cn.Db.Query(`
 	SELECT
 	u.idUsuario
     ,u.email
@@ -105,8 +80,8 @@ func IDUsuario(id int) (usuario modelos.Usuario, erro error) {
 	`, id)
 
 	for rows.Next() {
-		rows.Scan(&u.IdUsuario, &u.Email, &u.Senha, u.Nome, &u.UltimoNome, &u.DataNascimento, &u.QuantidadeMoeda,
-			&p.IdPerfil, &p.Perfil)
+		rows.Scan(&u.IDUsuario, &u.Email, &u.Senha, u.Nome, &u.UltimoNome, &u.DataNascimento, &u.QuantidadeMoeda,
+			&p.IDPerfil, &p.Perfil)
 		u.PerfilUsuario = append(u.PerfilUsuario, p)
 	}
 
@@ -114,14 +89,9 @@ func IDUsuario(id int) (usuario modelos.Usuario, erro error) {
 }
 
 //AdicionarUsuario método para adicionar um novo regitro de Usuario
-func AdicionarUsuario(usuario modelos.Usuario) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AdicionarUsuario(cn *Conexao, usuario e.Usuario) (erro error) {
 
-	addUsuario, err := db.Prepare("INSERT INTO Usuario(email, senha, nome, ultimoNome, dataNascimento, quantidadeMoeda)VALUES(?, ?, ?, ?, ?, ?)")
+	addUsuario, err := cn.Db.Prepare("INSERT INTO Usuario(email, senha, nome, ultimoNome, dataNascimento, quantidadeMoeda)VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -135,11 +105,11 @@ func AdicionarUsuario(usuario modelos.Usuario) (erro error) {
 	idUsuario, _ := uDb.LastInsertId()
 
 	for _, p := range usuario.PerfilUsuario {
-		var pu modelos.PerfilUsuario
-		pu.IdPerfil = p.IdPerfil
-		pu.IdUsuario = int(idUsuario)
+		var pu e.PerfilUsuario
+		pu.IDPerfil = p.IDPerfil
+		pu.IDUsuario = int(idUsuario)
 
-		err := AdicionarPerfilUsuario(pu)
+		err := AdicionarPerfilUsuario(cn, pu)
 		if err != nil {
 			return err
 		}
@@ -149,14 +119,9 @@ func AdicionarUsuario(usuario modelos.Usuario) (erro error) {
 }
 
 //AlterarUsuario método para atualizar o registro do Usuario
-func AlterarUsuario(usuario modelos.Usuario) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func AlterarUsuario(cn *Conexao, usuario e.Usuario) (erro error) {
 
-	addUsuario, err := db.Prepare(`UPDATE Usuario SET 
+	addUsuario, err := cn.Db.Prepare(`UPDATE Usuario SET 
 		email = ?, senha = ?, nome = ?, ultimoNome = ?, dataNascimento = ?, quantidadeMoeda = ? 
 		WHERE idUsuario = ?`)
 	if err != nil {
@@ -164,14 +129,14 @@ func AlterarUsuario(usuario modelos.Usuario) (erro error) {
 	}
 
 	addUsuario.Exec(usuario.Email, usuario.Senha, usuario.Nome, usuario.UltimoNome, usuario.DataNascimento,
-		usuario.QuantidadeMoeda, usuario.IdUsuario)
+		usuario.QuantidadeMoeda, usuario.IDUsuario)
 
 	for _, p := range usuario.PerfilUsuario {
-		var pu modelos.PerfilUsuario
-		pu.IdPerfil = p.IdPerfil
-		pu.IdUsuario = usuario.IdUsuario
+		var pu e.PerfilUsuario
+		pu.IDPerfil = p.IDPerfil
+		pu.IDUsuario = usuario.IDUsuario
 
-		err := AdicionarPerfilUsuario(pu)
+		err := AdicionarPerfilUsuario(cn, pu)
 		if err != nil {
 			return err
 		}
@@ -179,37 +144,32 @@ func AlterarUsuario(usuario modelos.Usuario) (erro error) {
 	return nil
 }
 
-func saldoBitCoin(usuario modelos.Usuario) (erro error) {
-	db, err := Conexao()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+func saldoBitCoin(cn *Conexao, usuario e.Usuario) (erro error) {
 
-	addUsuario, err := db.Prepare(`UPDATE Usuario SET quantidadeMoeda = quantidadeMoeda + ? WHERE idUsuario = ?`)
+	addUsuario, err := cn.Db.Prepare(`UPDATE Usuario SET quantidadeMoeda = quantidadeMoeda + ? WHERE idUsuario = ?`)
 	if err != nil {
 		return err
 	}
 
-	_, err = addUsuario.Exec(usuario.QuantidadeMoeda, usuario.IdUsuario)
+	_, err = addUsuario.Exec(usuario.QuantidadeMoeda, usuario.IDUsuario)
 
 	return err
 }
 
 //AtualizaSaldoBitCoin Atualiza as quantidades de BitCoin do Comprador e do Vend edor após Op eacao
-func AtualizaSaldoBitCoin(valorBitCoin float64, idVendedor int, idComprador int) (erro error) {
-	var comprador modelos.Usuario
-	comprador.IdUsuario = idComprador
+func AtualizaSaldoBitCoin(cn *Conexao, valorBitCoin float64, idVendedor int, idComprador int) (erro error) {
+	var comprador e.Usuario
+	comprador.IDUsuario = idComprador
 	comprador.QuantidadeMoeda = valorBitCoin
 
-	var vendedor modelos.Usuario
-	vendedor.IdUsuario = idVendedor
+	var vendedor e.Usuario
+	vendedor.IDUsuario = idVendedor
 	vendedor.QuantidadeMoeda = -valorBitCoin
 
-	err := saldoBitCoin(comprador)
+	err := saldoBitCoin(cn, comprador)
 	if err != nil {
 		return err
 	}
 
-	return saldoBitCoin(vendedor)
+	return saldoBitCoin(cn, vendedor)
 }

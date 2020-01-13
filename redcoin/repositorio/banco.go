@@ -2,23 +2,28 @@ package repositorio
 
 import (
 	"database/sql"
-	"redcoin/conexoes"
 
+	//Driver do Mysql
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//Conexao retorna o objeto que conecta ao banco de dados
-func Conexao() (db *sql.DB, erro error) {
-	cn  := conexoes.CredenciaisMysql()
+type repoMysql struct {
+	driver  string
+	conexao string
+	Db      *sql.DB
+	erro    error
+}
 
-	driver := cn.Driver
-	usuario := cn.Usuario
-	senha := cn.Senha
-	nomeBanco := cn.NomeBanco
-	configuracaoTempo := cn.ConfiguracaoTempo
-	porta := cn.Porta
+//Conexao estrutura com as propriedades de conexao ao Mysql
+type Conexao repoMysql
 
-	db, err := sql.Open(driver, usuario+":"+senha+"@"+porta+"/"+nomeBanco+configuracaoTempo)
-
-	return db, err
+//NovaConexao retorna o objeto que conecta ao banco de dados
+func NovaConexao(driver string, conexao string) *Conexao {
+	novoDb, e := sql.Open(driver, conexao)
+	return &Conexao{
+		driver:  driver,
+		conexao: conexao,
+		Db:      novoDb,
+		erro:    e,
+	}
 }
