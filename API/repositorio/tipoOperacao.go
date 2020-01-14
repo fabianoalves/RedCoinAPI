@@ -25,9 +25,18 @@ func TodosTipoOperacao(cn *Conexao) (listaTipoOperacao []e.TipoOperacao, erro er
 func IDTipoOperacao(cn *Conexao, id int8) (tipoOperacao e.TipoOperacao, erro error) {
 	to := e.TipoOperacao{}
 
-	e := cn.Db.QueryRow("SELECT idTipoOperacao, operacao FROM TipoOperacao WHERE idTipoOperacao = ?", id).Scan(&to.IDTipoOperacao, &to.Operacao)
+	rows, err := cn.Db.Query("SELECT idTipoOperacao, operacao FROM TipoOperacao WHERE idTipoOperacao = ?", id)
+	defer rows.Close()
 
-	return to, e
+	if err != nil {
+		return to, err
+	}
+
+	for rows.Next() {
+		rows.Scan(&to.IDTipoOperacao, &to.Operacao, &to.RegistroApagado)
+	}
+
+	return to, err
 }
 
 //AdicionarTipoOperacao método para adicionar um novo registro de TipoOperacao

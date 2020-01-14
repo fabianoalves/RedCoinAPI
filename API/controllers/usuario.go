@@ -2,97 +2,90 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
 	e "github.com/rteles86/RedCoinApi/API/entidade"
-	"github.com/rteles86/RedCoinApi/API/servico"
+	srv "github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //TodosUsuario método responsavel por listar os Usuarios
 func TodosUsuario(w http.ResponseWriter, r *http.Request) {
-	tU, e := servico.TodosUsuario()
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	tU, err := srv.TodosUsuario()
+	if err != nil {
+		u.RespostaInternalServerError(w)
 		return
 	}
 
 	json, _ := json.Marshal(tU)
-	fmt.Fprint(w, string(json))
-	return
+	u.RespostaOK(w, string(json))
 }
 
 //IDUsuario Retorna o objeto de Usuario de acordo com o ID informado
 func IDUsuario(w http.ResponseWriter, r *http.Request) {
-	keys := r.URL.Query()["id"]
-	id, e := strconv.Atoi(keys[0])
-
-	u, e := servico.IDUsuario(id)
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	keys, ok := r.URL.Query()["id"]
+	if !ok {
+		u.RespostaBadRequest("Informe o parâmetro ID", w)
 		return
 	}
 
-	json, _ := json.Marshal(u)
-	fmt.Fprint(w, string(json))
-	return
+	id, err := strconv.Atoi(keys[0])
+	if err != nil {
+		u.RespostaBadRequest("Formato do ID é Inválido. Informe apenas números inteiros", w)
+		return
+	}
+
+	usu, err := srv.IDUsuario(id)
+	if err != nil {
+		u.RespostaInternalServerError(w)
+		return
+	}
+
+	json, _ := json.Marshal(usu)
+	u.RespostaOK(w, string(json))
 }
 
 //AdicionarUsuario método responsável pela criação de um novo Usuario
 func AdicionarUsuario(w http.ResponseWriter, r *http.Request) {
 	var usuario e.Usuario
-	err := json.NewDecoder(r.Body).Decode(&usuario)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	if !u.ParseJSONEntidade(&usuario, w, r) {
 		return
 	}
 
-	err = e.New(&usuario)
+	err := u.New(&usuario)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AdicionarUsuario(usuario)
+	err = srv.AdicionarUsuario(usuario)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.Write([]byte(`{"msg":"Usuario criado com sucesso"}`))
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Usuario criado com sucesso")
 }
 
 //AlterarUsuario método responsável pela alteração de um Usuario
 func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 	var usuario e.Usuario
-	err := json.NewDecoder(r.Body).Decode(&usuario)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	if !u.ParseJSONEntidade(&usuario, w, r) {
 		return
 	}
 
-	err = e.New(&usuario)
+	err := u.New(&usuario)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AtualizarUsuario(usuario)
+	err = srv.AtualizarUsuario(usuario)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.Write([]byte(`{"msg":"Usuario atualizado com sucesso"}`))
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Usuario atualizado com sucesso")
 }

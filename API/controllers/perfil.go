@@ -2,99 +2,92 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
 	e "github.com/rteles86/RedCoinApi/API/entidade"
-	"github.com/rteles86/RedCoinApi/API/servico"
+	srv "github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //TodosPerfil método responsavel por listar os Perfil
 func TodosPerfil(w http.ResponseWriter, r *http.Request) {
-	w.Header()
 
-	tP, e := servico.TodosPerfil()
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	tP, err := srv.TodosPerfil()
+	if err != nil {
+		u.RespostaInternalServerError(w)
 		return
 	}
 
 	json, _ := json.Marshal(tP)
-	fmt.Fprint(w, string(json))
-	return
+	u.RespostaOK(w, string(json))
 }
 
 //IDPerfil Retorna o objeto de perfil de acordo com o ID informado
 func IDPerfil(w http.ResponseWriter, r *http.Request) {
-	keys := r.URL.Query()["id"]
-	id, e := strconv.Atoi(keys[0])
+	keys, ok := r.URL.Query()["id"]
+	if !ok {
+		u.RespostaBadRequest("Informe o parâmetro ID", w)
+		return
+	}
 
-	p, e := servico.IDPerfil(int8(id))
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	id, err := strconv.Atoi(keys[0])
+	if err != nil {
+		u.RespostaBadRequest("Formato do ID é Inválido. Informe apenas números inteiros", w)
+		return
+	}
+
+	p, err := srv.IDPerfil(int8(id))
+	if err != nil {
+		u.RespostaInternalServerError(w)
 		return
 	}
 
 	json, _ := json.Marshal(p)
-	fmt.Fprint(w, string(json))
-	return
+	u.RespostaOK(w, string(json))
 }
 
 //AdicionarPerfil método responsável pela criação de um novo Perfil
 func AdicionarPerfil(w http.ResponseWriter, r *http.Request) {
 	var perfil e.Perfil
-	err := json.NewDecoder(r.Body).Decode(&perfil)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+
+	if !u.ParseJSONEntidade(&perfil, w, r) {
 		return
 	}
 
-	err = e.New(&perfil)
+	err := u.New(&perfil)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AdicionarPerfil(perfil)
+	err = srv.AdicionarPerfil(perfil)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.Write([]byte(`{"msg":"Perfil criado com sucesso"}`))
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Perfil criado com sucesso")
 }
 
 //AlterarPerfil método responsável pela alteração de um Perfil
 func AlterarPerfil(w http.ResponseWriter, r *http.Request) {
 	var perfil e.Perfil
-	err := json.NewDecoder(r.Body).Decode(&perfil)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	if !u.ParseJSONEntidade(&perfil, w, r) {
 		return
 	}
 
-	err = e.New(&perfil)
+	err := u.New(&perfil)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AtualizarPerfil(perfil)
+	err = srv.AtualizarPerfil(perfil)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.Write([]byte(`{"msg":"Perfil atualizado com sucesso"}`))
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Perfil atualizado com sucesso")
 }

@@ -7,7 +7,7 @@ import (
 )
 
 //AdicionarOperacao método para adicionar um novo registro de Operacao
-func AdicionarOperacao(cn *Conexao, operacao e.Operacao) (erro error) {
+func AdicionarOperacao(cn *Conexao, operacao e.NovaOperacao) (erro error) {
 
 	addOperacao, err := cn.Db.Prepare(`INSERT INTO Operacao
 										(idTipoOperacao
@@ -20,12 +20,12 @@ func AdicionarOperacao(cn *Conexao, operacao e.Operacao) (erro error) {
 		return err
 	}
 
-	_, err = addOperacao.Exec(operacao.TipoOperacao.IDTipoOperacao, operacao.Vendedor.IDUsuario, operacao.Comprador.IDUsuario, operacao.DataOperacao, operacao.ValorMoeda, operacao.ValorBitCoin)
+	_, err = addOperacao.Exec(operacao.IDTipoOperacao, operacao.IDVendedor, operacao.IDComprador, operacao.DataOperacao, operacao.ValorMoeda, operacao.ValorBitCoin)
 	if err != nil {
 		return err
 	}
 
-	err = AtualizaSaldoBitCoin(cn, operacao.ValorBitCoin, operacao.Vendedor.IDUsuario, operacao.Comprador.IDUsuario)
+	err = AtualizaSaldoBitCoin(cn, operacao.ValorBitCoin, operacao.IDVendedor, operacao.IDComprador)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func EmailUsuarioOperacao(cn *Conexao, email string) (usuarioOperacao e.UsuarioO
 	return uO, err
 }
 
-//PeriodoOperacao retorna as operações  de acordo com um periodo informad o
+//PeriodoOperacao retorna as operações  de acordo com um periodo informado
 func PeriodoOperacao(cn *Conexao, periodo time.Time) (operacao []e.Operacao, erro error) {
 	o := []e.Operacao{}
 	anoI, mesI, diaI := periodo.Date()

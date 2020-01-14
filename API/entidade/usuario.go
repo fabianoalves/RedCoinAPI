@@ -9,8 +9,8 @@ type Usuario struct {
 	Senha           string    `json:"senha" validate:"required,min=8"`
 	Nome            string    `json:"nome" validate:"required"`
 	UltimoNome      string    `json:"ultimoNome" validate:"required"`
-	DataNascimento  time.Time `json:"nascimento" validate:"required,min=1900-01-01"`
+	DataNascimento  time.Time `json:"nascimento" validate:"required"`
 	QuantidadeMoeda float64   `json:"quantidadeMoeda"`
 	RegistroApagado bool
-	PerfilUsuario   []Perfil `json:"perfil"`
+	PerfilUsuario   []Perfil `json:"perfil" validate:"required"`
 }

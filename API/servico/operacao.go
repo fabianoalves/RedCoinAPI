@@ -19,7 +19,7 @@ func PeriodoOperacao(data time.Time) (operacao []e.Operacao, erro error) {
 }
 
 //PersistirOperacao método responsavel por adicionar uma operaçao
-func PersistirOperacao(operacao e.Operacao) (erro error) {
+func PersistirOperacao(operacao e.NovaOperacao) (erro error) {
 
 	if i.ExisteCotacao() {
 		operacao.ValorMoeda = i.CotacaoEmCache()

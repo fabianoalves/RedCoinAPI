@@ -2,98 +2,92 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
 	e "github.com/rteles86/RedCoinApi/API/entidade"
-	"github.com/rteles86/RedCoinApi/API/servico"
+	srv "github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //TodosTipoOperacao método responsavel por listar os Tipo Operacao
 func TodosTipoOperacao(w http.ResponseWriter, r *http.Request) {
 	w.Header()
 
-	tTo, e := servico.TodosTipoOperacao()
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	tTo, err := srv.TodosTipoOperacao()
+	if err != nil {
+		u.RespostaInternalServerError(w)
 		return
 	}
 
 	json, _ := json.Marshal(tTo)
-	fmt.Fprint(w, string(json))
-	return
+	u.RespostaOK(w, string(json))
 }
 
 //IDTipoOperacao Retorna o objeto de Tipo Operacao de acordo com o ID informado
 func IDTipoOperacao(w http.ResponseWriter, r *http.Request) {
-	keys := r.URL.Query()["id"]
-	id, e := strconv.Atoi(keys[0])
+	keys, ok := r.URL.Query()["id"]
+	if !ok {
+		u.RespostaBadRequest("Informe o parâmetro ID", w)
+		return
+	}
 
-	to, e := servico.IDTipoOperacao(int8(id))
-	if e != nil {
-		w.Write([]byte(`{"msg":"` + e.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	id, err := strconv.Atoi(keys[0])
+	if err != nil {
+		u.RespostaBadRequest("Formato do ID é Inválido. Informe apenas números inteiros", w)
+		return
+	}
+
+	to, err := srv.IDTipoOperacao(int8(id))
+	if err != nil {
+		u.RespostaInternalServerError(w)
 		return
 	}
 
 	json, _ := json.Marshal(to)
-	fmt.Fprint(w, string(json))
-	return
+	u.RespostaOK(w, string(json))
 }
 
 //AdicionarTipoOperacao método responsável pela criação de um novo Tipo Operacao
 func AdicionarTipoOperacao(w http.ResponseWriter, r *http.Request) {
 	var tipooOperacao e.TipoOperacao
-	err := json.NewDecoder(r.Body).Decode(&tipooOperacao)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	if !u.ParseJSONEntidade(&tipooOperacao, w, r) {
 		return
 	}
 
-	err = e.New(&tipooOperacao)
+	err := u.New(&tipooOperacao)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AdicionarTipoOperacao(tipooOperacao)
+	err = srv.AdicionarTipoOperacao(tipooOperacao)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Tipo Operacao criado com sucesso")
 }
 
 //AlterarTipoOperacao método responsável pela alteração de um Tipo Operacao
 func AlterarTipoOperacao(w http.ResponseWriter, r *http.Request) {
 	var tipooOperacao e.TipoOperacao
-	err := json.NewDecoder(r.Body).Decode(&tipooOperacao)
-	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+	if !u.ParseJSONEntidade(&tipooOperacao, w, r) {
 		return
 	}
 
-	err = e.New(&tipooOperacao)
+	err := u.New(&tipooOperacao)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
+		u.RespostaUnprocessableEntity(err.Error(), w)
 		return
 	}
 
-	err = servico.AtualizarTipoOperacao(tipooOperacao)
+	err = srv.AtualizarTipoOperacao(tipooOperacao)
 	if err != nil {
-		w.Write([]byte(`{"msg":"` + err.Error() + `"}`))
-		w.WriteHeader(http.StatusBadRequest)
+		u.RespostaInternalServerError(w)
 		return
 	}
 
-	w.Write([]byte(`{"msg":"TipoOperacao criado com sucesso"}`))
-	w.WriteHeader(http.StatusOK)
+	u.RespostaOK(w, "Tipo Operacao alterado com sucesso")
 }

@@ -2,7 +2,18 @@ package entidade
 
 import "time"
 
-//Operacao estrutura que representa a tabela Operacao
+//NovaOperacao estrutura que representa a tabela Operacao
+type NovaOperacao struct {
+	IDOperacao     int       `json:"id"`
+	IDTipoOperacao int       `json:"idTipo" validate:"required,min=1"`
+	IDVendedor     int       `json:"idVendedor" validate:"required,min=1"`
+	IDComprador    int       `json:"idComprador" validate:"required,min=1"`
+	DataOperacao   time.Time `json:"data" validate:"required"`
+	ValorMoeda     float64   `json:"valorMoeda" validate:"required"`
+	ValorBitCoin   float64   `json:"valorBitcoin" validate:"required"`
+}
+
+//Operacao representa a saida do relatorio por Email
 type Operacao struct {
 	IDOperacao   int          `json:"id"`
 	TipoOperacao TipoOperacao `json:"tipo"`
@@ -13,7 +24,7 @@ type Operacao struct {
 	ValorBitCoin float64      `json:"valorBitcoin"`
 }
 
-//UsuarioOperacao representa a saida para o cabeçalho do relatorio
+//UsuarioOperacao representa a saida para o cabeçalho do relatorio por Periodo
 type UsuarioOperacao struct {
 	IDUsuario    int         `json:"idUsuario"`
 	Email        string      `json:"email"`
@@ -21,7 +32,7 @@ type UsuarioOperacao struct {
 	Operacoes    []Operacoes `json:"operacoes"`
 }
 
-//Operacoes representa as operações de compra do usuario para o relatorio
+//Operacoes representa as operações de compra do usuario para o relatorio por periodo
 type Operacoes struct {
 	IDOperacao           int       `json:"id"`
 	TipoOperacao         string    `json:"tipo"`

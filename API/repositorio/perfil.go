@@ -25,9 +25,18 @@ func TodosPerfil(cn *Conexao) (listaPerfil []e.Perfil, erro error) {
 func IDPerfil(cn *Conexao, id int8) (perfil e.Perfil, erro error) {
 	p := e.Perfil{}
 
-	e := cn.Db.QueryRow("SELECT idPerfil, perfil FROM Perfil WHERE idPerfil = ?", id).Scan(&p.IDPerfil, &p.Perfil)
+	rows, err := cn.Db.Query("SELECT idPerfil, perfil FROM Perfil WHERE idPerfil = ?", id)
+	defer rows.Close()
 
-	return p, e
+	if err != nil {
+		return p, err
+	}
+
+	for rows.Next() {
+		rows.Scan(&p.IDPerfil, &p.Perfil, &p.RegistroApagado)
+	}
+
+	return p, nil
 }
 
 //AdicionarPerfil método para adicionar um novo registro de Perfil

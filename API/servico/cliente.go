@@ -1,7 +1,6 @@
 package servico
 
 import (
-	"errors"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -18,12 +17,11 @@ func CriarCliente(cliente e.Cliente) (erro error) {
 }
 
 //AutenticacaoCliente verifica as credenciais de um cliente
-func AutenticacaoCliente(cliente e.Cliente) (existe bool, token string, erro error) {
+func AutenticacaoCliente(cliente e.Cliente) (existe bool, msgToken string) {
 
 	c := repo.Cliente(cn, cliente.Usuario)
-
 	if !u.VerificarSenha(cliente.Senha, c.Senha) {
-		return false, "", errors.New("Ops... usuario não tem acesso a API")
+		return false, "Ops... usuario não tem acesso a API"
 	}
 
 	expirationTime := time.Now().Add(50 * time.Minute)
@@ -36,12 +34,9 @@ func AutenticacaoCliente(cliente e.Cliente) (existe bool, token string, erro err
 
 	gerarToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := gerarToken.SignedString([]byte("redcoinApi2020!@"))
-	if erro != nil {
-		return false, "", err
-	}
+	tokenString, _ := gerarToken.SignedString([]byte("redcoinApi2020!@"))
 
-	return true, tokenString, nil
+	return true, tokenString
 }
 
 //ValidarTokenCliente verifica se o token da API continua válido
