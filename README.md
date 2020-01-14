@@ -54,7 +54,7 @@ Como funciona:<br>
         &nbsp;&nbsp;&nbsp;- Execute o seguinte comando: <b>docker-compose up -d</b>
     </li>
     <li>
-        Navegue até o diretório do repositório RedCoinApi "./Instalacao"<br/>
+        Navegue até o diretório do repositório RedCoinApi "./API"<br/>
         &nbsp;&nbsp;&nbsp;- Execute o seguinte comando: <b>docker build -t redcoin .</b>
     </li>
     <li>
@@ -78,19 +78,19 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Usuario":"rteles"
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"Senha":"rteles123"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"usuario":"redcoinApi"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"senha":"redcoinApi@@"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 <h3>Autenticar Cliente Api</h3>
 <p>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Descrição: Verifica se as credenciais do cliente da RedCoinApi são válidas<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL: http://localhost:2801/autenticacao<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: GET<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Usuario":"rteles"
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"Senha":"rteles123"
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"usuario":"redcoinApi"
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"senha":"redcoinApi@@"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 <h3>Listar Todos Perfil</h3>
@@ -113,7 +113,7 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Perfil":"Comprador"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"perfil":"Comprador"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 <h3>Perfil Alterar</h3>
@@ -123,8 +123,8 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: PUT<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"idPerfil":1
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"Perfil":"Corretor"
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":1
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"perfil":"Corretor"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 
@@ -149,7 +149,7 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Operacao":"Venda"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"operacao":"Venda"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 <h3>TipoOperacao Alterar</h3>
@@ -159,8 +159,8 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: PUT<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDTipoOperacao":1
-    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"Operacao":"Compra"
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":1
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,"operacao":"Compra"
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>
 
@@ -185,18 +185,16 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Email": "redcoinapi@redcoinapi.com",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Senha": "123Mudar",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Nome": "Red Coin",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"UltimoNome": "Api",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataNascimento": "2019-12-22T00:00:00Z",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"QuantidadeMoeda": 0,
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false,
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"PerfilUsuario": [
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"email": "redcoinapi@redcoinapi.com",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"senha": "123Mudar",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nome": "Red Coin",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ultimoNome": "Api",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nascimento": "2019-12-22T00:00:00Z",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"quantidadeMoeda": 0,
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"perfil": [
         <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdPerfil": 1,
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Perfil": "Comprador",
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1,
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"perfil": "Comprador"
             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
@@ -208,19 +206,17 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: PUT<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros Body: 
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdUsuario": 1,
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Email": "redcoinapi@redcoinapi.com",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Senha": "123Mudar",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Nome": "Red Coin",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"UltimoNome": "Api",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataNascimento": "2019-12-22T00:00:00Z",
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"QuantidadeMoeda": 0,
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false,
-        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"PerfilUsuario": [
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 1,
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"email": "redcoinapi@redcoinapi.com",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"senha": "123Mudar",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nome": "Red Coin",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ultimoNome": "Api",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nascimento": "2019-12-22T00:00:00Z",
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"quantidadeMoeda": 0,
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"perfil": [
         <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdPerfil": 2,
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Perfil": "Vendedor",
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id": 2,
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"perfil": "Vendedor"
             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]
     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
@@ -246,36 +242,11 @@ Como funciona:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tipo: POST<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parâmetros body:<br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdOperacao": 2,<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"TipoOperacao": {<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IDTipoOperacao": 1,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Operacao": "Compra",<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Vendedor": {<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdUsuario": 2,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Email": "rteles@outlook.com",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Senha": "",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Nome": "Rodolfo",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"UltimoNome": "Teles",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataNascimento": "0001-01-01T00:00:00Z",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"QuantidadeMoeda": 0,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"PerfilUsuario": null<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Comprador": {<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"IdUsuario": 1,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Email": "manuteles@outlook.com",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Senha": "",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Nome": "Manuela Dantas",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"UltimoNome": "Teles",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataNascimento": "0001-01-01T00:00:00Z",<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"QuantidadeMoeda": 0,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"RegistroApagado": false,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"PerfilUsuario": null<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataOperacao": "2019-12-22T01:56:32Z",<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ValorMoeda": 14717.366,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ValorBitCoin": 0.12<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"idTipo": 1,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"idVendedor": 2,{<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"idComprador": 2,{<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"DataOperacao": "2019-12-22T01:56:32Z",<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ValorMoeda": 14717.366,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"ValorBitCoin": 0.10<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
 </p>

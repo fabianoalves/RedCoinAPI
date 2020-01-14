@@ -33,7 +33,7 @@ func IDTipoOperacao(cn *Conexao, id int8) (tipoOperacao e.TipoOperacao, erro err
 	}
 
 	for rows.Next() {
-		rows.Scan(&to.IDTipoOperacao, &to.Operacao, &to.RegistroApagado)
+		rows.Scan(&to.IDTipoOperacao, &to.Operacao)
 	}
 
 	return to, err

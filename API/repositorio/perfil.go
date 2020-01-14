@@ -33,7 +33,7 @@ func IDPerfil(cn *Conexao, id int8) (perfil e.Perfil, erro error) {
 	}
 
 	for rows.Next() {
-		rows.Scan(&p.IDPerfil, &p.Perfil, &p.RegistroApagado)
+		rows.Scan(&p.IDPerfil, &p.Perfil)
 	}
 
 	return p, nil
