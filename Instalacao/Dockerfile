@@ -1,11 +1,11 @@
 
 FROM golang:latest
 
-WORKDIR /go/src/github.com/rteles86/RedCoinApi/redcoin
+WORKDIR /go/src/github.com/rteles86/RedCoinApi/API
 
 ADD . .
 
-WORKDIR /go/src/github.com/rteles86/RedCoinApi/redcoin
+WORKDIR /go/src/github.com/rteles86/RedCoinApi/API
 
 RUN go get github.com/dgrijalva/jwt-go
 RUN go get github.com/go-redis/redis
