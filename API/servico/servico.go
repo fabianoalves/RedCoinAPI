@@ -1,6 +1,6 @@
 package servico
 
-import repo "github.com/rteles86/RedCoinApi/redcoin/repositorio"
+import repo "github.com/rteles86/RedCoinApi/API/repositorio"
 
 var cn *repo.Conexao
 

@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	"github.com/rteles86/RedCoinApi/redcoin/servico"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	"github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //EmailUsuarioOperacao método responsavel por listar as operações de um determinado usuario através de seu Email

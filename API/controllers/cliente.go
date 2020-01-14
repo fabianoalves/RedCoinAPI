@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	srv "github.com/rteles86/RedCoinApi/redcoin/servico"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	srv "github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //PersistirCliente método responsavel por adicionar um Perfil

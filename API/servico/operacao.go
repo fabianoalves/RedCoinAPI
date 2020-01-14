@@ -3,9 +3,9 @@ package servico
 import (
 	"time"
 
-	i "github.com/rteles86/RedCoinApi/redcoin/configuracoes/infra"
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	rep "github.com/rteles86/RedCoinApi/redcoin/repositorio"
+	i "github.com/rteles86/RedCoinApi/API/configuracoes/infra"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	rep "github.com/rteles86/RedCoinApi/API/repositorio"
 )
 
 //EmailUsuarioOperacao método responsavel por listar as operações de um determinado usuario através de seu Email

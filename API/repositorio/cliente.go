@@ -1,8 +1,6 @@
 package repositorio
 
-import (
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-)
+import e "github.com/rteles86/RedCoinApi/API/entidade"
 
 //AdicionarCliente método para criar o registro do cliente para acessar a Api
 func AdicionarCliente(cn *Conexao, cliente e.Cliente) (erro error) {

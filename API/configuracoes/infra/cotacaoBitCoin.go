@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"net/url"
 
-	cn "github.com/rteles86/RedCoinApi/redcoin/configuracoes/conexoes"
-	u "github.com/rteles86/RedCoinApi/redcoin/configuracoes/utils"
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+	cn "github.com/rteles86/RedCoinApi/API/configuracoes/conexoes"
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
 )
 
 func consultaPrecoBitcoin(target interface{}) error {

@@ -1,6 +1,6 @@
 package repositorio
 
-import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+import e "github.com/rteles86/RedCoinApi/API/entidade"
 
 //TodosTipoOperacao retorna todos os registros da tabela tipoOperacao
 func TodosTipoOperacao(cn *Conexao) (listaTipoOperacao []e.TipoOperacao, erro error) {

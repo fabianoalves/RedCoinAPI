@@ -1,8 +1,6 @@
 package repositorio
 
-import (
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-)
+import e "github.com/rteles86/RedCoinApi/API/entidade"
 
 //TodosUsuario retorna todos os registros da tabela Usuari0
 func TodosUsuario(cn *Conexao) (listaUsuario []e.Usuario, erro error) {

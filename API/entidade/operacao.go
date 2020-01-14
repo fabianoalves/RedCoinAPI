@@ -1,8 +1,6 @@
 package entidade
 
-import (
-	"time"
-)
+import "time"
 
 //Operacao estrutura que representa a tabela Operacao
 type Operacao struct {

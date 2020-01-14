@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	u "github.com/rteles86/RedCoinApi/redcoin/configuracoes/utils"
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	repo "github.com/rteles86/RedCoinApi/redcoin/repositorio"
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	repo "github.com/rteles86/RedCoinApi/API/repositorio"
 )
 
 //CriarCliente registra as credenciais de um cliente

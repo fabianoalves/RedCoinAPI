@@ -1,6 +1,6 @@
 package repositorio
 
-import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+import e "github.com/rteles86/RedCoinApi/API/entidade"
 
 //TodosPerfil retorna todos os registros da tabela Perfil
 func TodosPerfil(cn *Conexao) (listaPerfil []e.Perfil, erro error) {

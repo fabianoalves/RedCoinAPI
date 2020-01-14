@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
-	cn "github.com/rteles86/RedCoinApi/redcoin/configuracoes/conexoes"
-	u "github.com/rteles86/RedCoinApi/redcoin/configuracoes/utils"
+	cn "github.com/rteles86/RedCoinApi/API/configuracoes/conexoes"
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
 )
 
 func conexaoRedis() *redis.Client {

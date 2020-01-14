@@ -1,6 +1,6 @@
 package repositorio
 
-import e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+import e "github.com/rteles86/RedCoinApi/API/entidade"
 
 //IDUsuarioPerfilUsuario retorna todos os registros da tabela PerfilUsuario de acordo com o idUsuario
 func IDUsuarioPerfilUsuario(cn *Conexao, idusuario int) (perfilUsuario []e.PerfilUsuario, erro error) {

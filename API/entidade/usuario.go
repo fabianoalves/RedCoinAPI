@@ -1,8 +1,6 @@
 package entidade
 
-import (
-	"time"
-)
+import "time"
 
 //Usuario estrutura que representa a tabela Usuario
 type Usuario struct {

@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	"github.com/rteles86/RedCoinApi/redcoin/servico"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	"github.com/rteles86/RedCoinApi/API/servico"
 )
 
 //TodosTipoOperacao método responsavel por listar os Tipo Operacao

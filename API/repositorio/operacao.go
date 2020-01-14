@@ -3,7 +3,7 @@ package repositorio
 import (
 	"time"
 
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
 )
 
 //AdicionarOperacao método para adicionar um novo registro de Operacao

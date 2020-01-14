@@ -6,11 +6,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	cn "github.com/rteles86/RedCoinApi/redcoin/configuracoes/conexoes"
-	u "github.com/rteles86/RedCoinApi/redcoin/configuracoes/utils"
-	c "github.com/rteles86/RedCoinApi/redcoin/controllers"
-	repo "github.com/rteles86/RedCoinApi/redcoin/repositorio"
-	srv "github.com/rteles86/RedCoinApi/redcoin/servico"
+	cn "github.com/rteles86/RedCoinApi/API/configuracoes/conexoes"
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
+	c "github.com/rteles86/RedCoinApi/API/controllers"
+	repo "github.com/rteles86/RedCoinApi/API/repositorio"
+	srv "github.com/rteles86/RedCoinApi/API/servico"
 )
 
 func main() {

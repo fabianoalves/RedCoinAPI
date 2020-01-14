@@ -3,9 +3,9 @@ package servico
 import (
 	"errors"
 
-	u "github.com/rteles86/RedCoinApi/redcoin/configuracoes/utils"
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	repo "github.com/rteles86/RedCoinApi/redcoin/repositorio"
+	u "github.com/rteles86/RedCoinApi/API/configuracoes/utils"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	repo "github.com/rteles86/RedCoinApi/API/repositorio"
 )
 
 //TodosUsuario retorna a lista com todos dados de Usuario

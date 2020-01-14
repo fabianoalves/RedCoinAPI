@@ -1,8 +1,8 @@
 package servico
 
 import (
-	e "github.com/rteles86/RedCoinApi/redcoin/entidade"
-	repo "github.com/rteles86/RedCoinApi/redcoin/repositorio"
+	e "github.com/rteles86/RedCoinApi/API/entidade"
+	repo "github.com/rteles86/RedCoinApi/API/repositorio"
 )
 
 //TodosTipoOperacao retorna a lista com todos dados de TipoOperacao
