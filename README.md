@@ -17,7 +17,7 @@ O repositório RedCoinApi contém as operações para viabilizar as transações
             TipoOperacao - Representa o tipo da movimentação que o Usuario está realizando.
         </li>
     </ul>
-    <img src="redcoin/DER/RedCoinApi-Der.png" />
+    <img src="Documentacao/RedCoinApi-Der.png" />
 </p>
 <h2>Utilização do Redis</h2>
 A fim de Otimizar o desempenho das operações de compra e venda de BitCoin, é utilizado o banco de dados Redis, para gravar em cache-server a cotação dos Bitcoins.<br/>
