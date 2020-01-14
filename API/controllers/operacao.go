@@ -92,5 +92,5 @@ func PersistirOperacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.RespostaOK(w, "Transação de Bitcoin criada com sucesso")
+	u.RespostaOK(w, `{"mensagem":"Transação de Bitcoin criada com sucesso"}`)
 }
