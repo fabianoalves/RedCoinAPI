@@ -50,15 +50,11 @@ Como funciona:<br>
         Abra o terminal de comando de seu sistema operacional. Ex: MS-DOS (Windows) ou TERMINAL - MacOS
     </li>
     <li>
-        Navegue até o diretório do repositório RedCoinApi "./docker-compose/mysql"<br/>
-        &nbsp;&nbsp;&nbsp;- Execute o seguinte comando: <b>docker-compose up -d db</b>
-    </li>
-    <li>
-        Navegue até o diretório do repositório RedCoinApi "./docker-compose/redis"<br/>
+        Navegue até o diretório do repositório RedCoinApi "./Instalacao/docker-compose"<br/>
         &nbsp;&nbsp;&nbsp;- Execute o seguinte comando: <b>docker-compose up -d</b>
     </li>
     <li>
-        Navegue até o diretório do repositório RedCoinApi que se encontra o arquivo Dockerfile "./redcoin"<br/>
+        Navegue até o diretório do repositório RedCoinApi "./Instalacao"<br/>
         &nbsp;&nbsp;&nbsp;- Execute o seguinte comando: <b>docker build -t redcoin .</b>
     </li>
     <li>
@@ -67,7 +63,7 @@ Como funciona:<br>
     </li>
     <li>
         Execute o arquivo de migration<br />
-        &nbsp;&nbsp;&nbsp;Navegue até o diretório "./migration"<br />
+        &nbsp;&nbsp;&nbsp;Navegue até o diretório "./Instalacao/migration"<br />
         &nbsp;&nbsp;&nbsp;Execute o script na instância do MySql criada após a execução do "docker-compose/mysql"<br />
     </li>
 </ol>
