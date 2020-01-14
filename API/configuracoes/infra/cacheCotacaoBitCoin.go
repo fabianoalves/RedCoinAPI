@@ -11,7 +11,7 @@ import (
 
 func conexaoRedis() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     u.DecriptografarChaves(cn.EnderecoRedis),
 		Password: u.DecriptografarChaves(cn.SenhaRedis),
 		DB:       cn.IDBancoRedis,
 	})
